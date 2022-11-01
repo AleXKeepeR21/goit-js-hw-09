@@ -39,11 +39,11 @@ startBtn.addEventListener('click', startTimeBtn);
 
 function startTimeBtn() {
   const startTime = calendar.selectedDates[0];
-  console.log(startTime);
+  // console.log(startTime);
 
   interval = setInterval(() => {
     const deltaTime = startTime - Date.now();
-    console.log(deltaTime);
+    // console.log(deltaTime);
     if (deltaTime <= 0) {
       clearInterval(interval);
       return;

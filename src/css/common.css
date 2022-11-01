@@ -20,5 +20,6 @@ img {
 .timer {
   display: flex;
   font-size: 25px;
+  font-weight: 600;
   gap: 10px;
 }
