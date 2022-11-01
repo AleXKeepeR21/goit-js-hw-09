@@ -3,6 +3,7 @@ import Notiflix from 'notiflix';
 import flatpickr from 'flatpickr';
 // Додатковий імпорт стилів
 import 'flatpickr/dist/flatpickr.min.css';
+import '../css/common.css';
 
 const startBtn = document.querySelector('[data-start]');
 const dataDays = document.querySelector('[data-days]');
@@ -25,6 +26,7 @@ const options = {
     if (selectedDates[0] < Date.now()) {
       Notiflix.Notify.failure('Please choose a date in the future');
       // alert('Please choose a date in the future');
+      startBtn.setAttribute('disabled', true);
     }
     startBtn.removeAttribute('disabled');
   },
