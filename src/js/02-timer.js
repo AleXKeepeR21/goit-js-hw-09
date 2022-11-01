@@ -10,6 +10,8 @@ const dataHours = document.querySelector('[data-hours]');
 const dataMinutes = document.querySelector('[data-minutes]');
 const dataSeconds = document.querySelector('[data-seconds]');
 
+let interval = null;
+
 startBtn.setAttribute('disabled', true);
 
 const options = {
@@ -30,25 +32,45 @@ const options = {
 
 const calendar = flatpickr('#datetime-picker', options);
 
-const timer = {
-  isActive: false,
-  start() {
-    if (this.isActive) {
+// startBtn = addEventListener('click', timer.start().bind(timer));
+startBtn.addEventListener('click', startTimeBtn);
+
+function startTimeBtn() {
+  const startTime = calendar.selectedDates[0];
+  console.log(startTime);
+
+  interval = setInterval(() => {
+    const deltaTime = startTime - Date.now();
+    console.log(deltaTime);
+    if (deltaTime <= 0) {
+      clearInterval(interval);
       return;
     }
+    const time = convertMs(deltaTime);
 
-    const startTime = calendar.selectedDates[0];
-    this.isActive = true;
+    updDateTime(time);
+  }, 1000);
+}
 
-    setInterval(() => {
-      const currentTime = Date.now();
-      const deltaTime = startTime - currentTime;
-      const time = convertMs(deltaTime);
+// const timer = {
+//   isActive: false,
+//   start() {
+//     if (this.isActive) {
+//       return;
+//     }
 
-      updDateTime(time);
-    }, 1000);
-  },
-};
+//     const startTime = calendar.selectedDates[0];
+//     this.isActive = true;
+
+//     setInterval(() => {
+//       const currentTime = Date.now();
+//       const deltaTime = startTime - currentTime;
+//       const time = convertMs(deltaTime);
+
+//       updDateTime(time);
+//     }, 1000);
+//   },
+// };
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -58,13 +80,15 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = pad(Math.floor(ms / day));
+  const days = addLeadingZero(Math.floor(ms / day));
   // Remaining hours
-  const hours = pad(Math.floor((ms % day) / hour));
+  const hours = addLeadingZero(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
+  const minutes = addLeadingZero(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
+  const seconds = addLeadingZero(
+    Math.floor((((ms % day) % hour) % minute) / second)
+  );
 
   return { days, hours, minutes, seconds };
 }
@@ -79,5 +103,3 @@ function updDateTime({ days, hours, minutes, seconds }) {
   dataMinutes.textContent = `${minutes}`;
   dataSeconds.textContent = `${seconds}`;
 }
-
-startBtn = addEventListener('click', timer.start().bind(timer));
